@@ -4,11 +4,9 @@
 int calculate(char*);
 
 int main() {
-    char expression[4] = "";
-    printf("Available operations are +, -, *, /. End your expression with a $ character\n");
-    scanf("%3s", expression);
-    printf("%s", expression);
-    printf("len of expression: %lu\n", strlen(expression));
+    char expression[16] = "";
+    printf("Available operations are +, -, *, /\n");
+    scanf("%15s", expression);
     calculate(expression);
     printf("\n");
     getchar();
@@ -17,10 +15,8 @@ int main() {
 
 int calculate(char* expression) {
     printf("%s", expression);
-    char c = (char) expression;
-    while(strcmp(&c, "\0")) {
-        printf("%c", c);
-        c++;
+    for(int i = 0; i++; i < sizeof(expression)) {
+        printf("%c", i);
     }
     return 0;
 }
