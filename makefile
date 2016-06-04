@@ -9,3 +9,6 @@ run : main.c
 test : test_runner.c linked_list.c
 	gcc test_runner.c linked_list.c -o test_runner
 	./test_runner
+debug_test : test_runner.c linked_list.c
+	gcc -g test_runner.c linked_list.c -o test_runner
+	gdb test_runner
