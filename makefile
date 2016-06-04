@@ -6,3 +6,6 @@ clean:
 run : main.c
 	gcc main.c linked_list.c -o main
 	./main
+test : test_runner.c linked_list.c
+	gcc test_runner.c linked_list.c -o test_runner
+	./test_runner
