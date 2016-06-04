@@ -8,3 +8,14 @@ struct Node* ll_new(void)
     ll->data = NULL;
     return ll;
 }
+// A linked list must have a head. If the head doesn't point to any next
+// element then the list is empty.
+int ll_isempty(struct Node* head)
+{
+    if(head->next == NULL)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
