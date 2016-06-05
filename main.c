@@ -1,32 +1,36 @@
 #include <stdio.h>
 #include <string.h>
+#include "linked_list.h"
+
+#define TRUE  1
+#define FALSE 0
 
 /* Algorithm:
  * get the expression string
- * translate string into tokens
- * put tokens into syntax btree
- * evaluate syntax tree by traversing btree
+ * translate string into tokens (lexical analysis)
+ * build a syntax tree using an inorder binary tree traversal (syntax analysis)
+ * evaluate syntax tree by inorder traversal
  */
 
-int calculate(char*);
-const char PLUS[] = "+";
-const char MINUS[] = "-";
-const char FOUR[] = "4";
+struct Token
+{
+    char* token_name;
+    char* attribute_value;
+};
+
+char** scanner(char*);
+struct Token** parser(struct Node* symbol_table);
 
 int main() {
     char expression[16] = "";
     printf("Available operations are +, -, *, /\n");
     scanf("%15s", expression);
-    calculate(expression);
+    scanner(expression);
     printf("\n");
     getchar();
     return 0;
 }
 
-int calculate(char* expression) {
-    printf("%s", expression);
-    for(int i = 0; i++; i < sizeof(expression)) {
-        printf("%c", i);
     }
     return 0;
 }
