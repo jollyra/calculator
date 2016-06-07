@@ -26,7 +26,9 @@ struct SymbolTable
 };
 
 struct SymbolTable* scanner(char* expression);
+void add_symbol(struct SymbolTable* symbol_table, struct Token* t);
 void print_symbol_table(struct SymbolTable* symbol_table);
+struct Token* new_token(char* token_name, char* attribute_value);
 /* struct Token** parser(struct Token* symbol_table); */
 
 int main() {
@@ -52,32 +54,31 @@ struct SymbolTable* scanner(char* expression) {
     // scan through the expression and create tokens
     for(int c = 0; c < sizeof(expression); c++) {
         if(expression[c] == '+') {
-            struct Token* t = malloc(sizeof(struct Token));
-            char* token_name = "+";
-            char* attribute_value = "+";
-            t->token_name = token_name;
-            t->attribute_value = attribute_value;
-            symbol_table->tokens[symbol_table->count] = t;
-            symbol_table->count+=1;
+            struct Token* t = new_token("+", "+");
+            add_symbol(symbol_table, t);
         } else if(expression[c] == '-') {
-            struct Token* t = malloc(sizeof(struct Token));
-            char* token_name = "-";
-            char* attribute_value = "-";
-            t->token_name = token_name;
-            t->attribute_value = attribute_value;
-            symbol_table->tokens[symbol_table->count] = t;
-            symbol_table->count+=1;
+            struct Token* t = new_token("-", "-");
+            add_symbol(symbol_table, t);
         } else if(expression[c] == '1') {
-            struct Token* t = malloc(sizeof(struct Token));
-            char* token_name = "NUM";
-            char* attribute_value = "1";
-            t->token_name = token_name;
-            t->attribute_value = attribute_value;
-            symbol_table->tokens[symbol_table->count] = t;
-            symbol_table->count+=1;
+            struct Token* t = new_token("NUM", "1");
+            add_symbol(symbol_table, t);
         }
     }
     return symbol_table;
+}
+
+struct Token* new_token(char* token_name, char* attribute_value)
+{
+    struct Token* t = malloc(sizeof(struct Token));
+    t->token_name = token_name;
+    t->attribute_value = attribute_value;
+    return t;
+}
+
+void add_symbol(struct SymbolTable* symbol_table, struct Token* t)
+{
+    symbol_table->tokens[symbol_table->count] = t;
+    symbol_table->count+=1;
 }
 
 void print_symbol_table(struct SymbolTable* symbol_table)
