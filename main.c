@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "linked_list.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -31,6 +30,17 @@ int main() {
     return 0;
 }
 
+// Lexical Analysis
+// take the string of input characters and group them into meaningful chunks
+// called 'lexemes'.
+char** scanner(char* expression) {
+    // symbol table
+    /* struct Node* symbol_table = ll_new(); */
+    for(int c = 0; c < sizeof(expression); c++) {
+        printf("_%c", expression[c]);
+        if(expression[c] == '+') {
+            
+        }
     }
     return 0;
 }
