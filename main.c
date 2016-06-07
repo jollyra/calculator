@@ -26,10 +26,11 @@ struct SymbolTable
 };
 
 struct SymbolTable* scanner(char* expression);
-void add_symbol(struct SymbolTable* symbol_table, struct Token* t);
-void print_symbol_table(struct SymbolTable* symbol_table);
-struct Token* new_token(char* token_name, char* attribute_value);
-/* struct Token** parser(struct Token* symbol_table); */
+void symbol_table_add(struct SymbolTable* symbol_table, struct Token* t);
+void symbol_table_print(struct SymbolTable* symbol_table);
+
+struct Token* token_new(char* token_name, char* attribute_value);
+/* struct Token** parser(struct SymbolTable* symbol_table); */
 
 int main() {
     char expression[16] = "";
@@ -38,7 +39,7 @@ int main() {
 
     // creat the symbol table
     struct SymbolTable* symbol_table = scanner(expression);
-    print_symbol_table(symbol_table);
+    symbol_table_print(symbol_table);
 
     printf("\n");
     getchar();
@@ -54,20 +55,20 @@ struct SymbolTable* scanner(char* expression) {
     // scan through the expression and create tokens
     for(int c = 0; c < sizeof(expression); c++) {
         if(expression[c] == '+') {
-            struct Token* t = new_token("+", "+");
-            add_symbol(symbol_table, t);
+            struct Token* t = token_new("+", "+");
+            symbol_table_add(symbol_table, t);
         } else if(expression[c] == '-') {
-            struct Token* t = new_token("-", "-");
-            add_symbol(symbol_table, t);
+            struct Token* t = token_new("-", "-");
+            symbol_table_add(symbol_table, t);
         } else if(expression[c] == '1') {
-            struct Token* t = new_token("NUM", "1");
-            add_symbol(symbol_table, t);
+            struct Token* t = token_new("NUM", "1");
+            symbol_table_add(symbol_table, t);
         }
     }
     return symbol_table;
 }
 
-struct Token* new_token(char* token_name, char* attribute_value)
+struct Token* token_new(char* token_name, char* attribute_value)
 {
     struct Token* t = malloc(sizeof(struct Token));
     t->token_name = token_name;
@@ -75,13 +76,13 @@ struct Token* new_token(char* token_name, char* attribute_value)
     return t;
 }
 
-void add_symbol(struct SymbolTable* symbol_table, struct Token* t)
+void symbol_table_add(struct SymbolTable* symbol_table, struct Token* t)
 {
     symbol_table->tokens[symbol_table->count] = t;
     symbol_table->count+=1;
 }
 
-void print_symbol_table(struct SymbolTable* symbol_table)
+void symbol_table_print(struct SymbolTable* symbol_table)
 {
     printf("symbol_table\n");
     for(int i = 0; i < symbol_table->count; i++)
