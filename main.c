@@ -18,7 +18,7 @@ struct Token
 };
 
 char** scanner(char*);
-struct Token** parser(struct Node* symbol_table);
+struct Token** parser(struct Token* symbol_table);
 
 int main() {
     char expression[16] = "";
@@ -35,11 +35,11 @@ int main() {
 // called 'lexemes'.
 char** scanner(char* expression) {
     // symbol table
-    /* struct Node* symbol_table = ll_new(); */
+    struct Token* symbol_table[16];
+
     for(int c = 0; c < sizeof(expression); c++) {
-        printf("_%c", expression[c]);
+        printf("%c", expression[c]);
         if(expression[c] == '+') {
-            
         }
     }
     return 0;
