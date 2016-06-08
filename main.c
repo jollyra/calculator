@@ -63,6 +63,33 @@ struct SymbolTable* scanner(char* expression) {
         } else if(expression[c] == '1') {
             struct Token* t = token_new("NUM", "1");
             symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '2') {
+            struct Token* t = token_new("NUM", "2");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '3') {
+            struct Token* t = token_new("NUM", "3");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '4') {
+            struct Token* t = token_new("NUM", "4");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '5') {
+            struct Token* t = token_new("NUM", "5");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '6') {
+            struct Token* t = token_new("NUM", "6");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '7') {
+            struct Token* t = token_new("NUM", "7");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '8') {
+            struct Token* t = token_new("NUM", "8");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '9') {
+            struct Token* t = token_new("NUM", "9");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '0') {
+            struct Token* t = token_new("NUM", "0");
+            symbol_table_add(symbol_table, t);
         }
     }
     return symbol_table;
