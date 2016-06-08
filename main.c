@@ -60,6 +60,12 @@ struct SymbolTable* scanner(char* expression) {
         } else if(expression[c] == '-') {
             struct Token* t = token_new("-", "-");
             symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '*') {
+            struct Token* t = token_new("*", "*");
+            symbol_table_add(symbol_table, t);
+        } else if(expression[c] == '/') {
+            struct Token* t = token_new("/", "/");
+            symbol_table_add(symbol_table, t);
         } else if(expression[c] == '1') {
             struct Token* t = token_new("NUM", "1");
             symbol_table_add(symbol_table, t);
