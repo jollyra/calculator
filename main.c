@@ -4,6 +4,7 @@
 
 #define TRUE  1
 #define FALSE 0
+#define MAX_EXPRESSION_SIZE 16
 #define SYMBOL_TABLE_SIZE 16
 
 /* Algorithm:
@@ -33,7 +34,7 @@ struct Token* token_new(char* token_name, char* attribute_value);
 /* struct Token** parser(struct SymbolTable* symbol_table); */
 
 int main() {
-    char expression[16] = "";
+    char expression[MAX_EXPRESSION_SIZE];
     printf("Available operations are +, -, *, /\n");
     scanf("%15s", expression);
 
