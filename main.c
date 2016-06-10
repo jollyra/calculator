@@ -10,8 +10,9 @@
 /* Algorithm:
  * ☑ get the expression string
  * ☑ translate string into tokens (lexical analysis)
- * build a syntax tree using an inorder binary tree traversal (syntax analysis)
- * evaluate syntax tree by inorder traversal
+ * - build a syntax tree using an inorder binary tree traversal with operator
+ * precedence (syntax analysis)
+ * - evaluate syntax tree
  *
  * The Syntax Tree
  * For my chosen operators +, -, *, / an array representation of the syntax
