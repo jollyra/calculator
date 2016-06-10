@@ -8,10 +8,17 @@
 #define SYMBOL_TABLE_SIZE 16
 
 /* Algorithm:
- * get the expression string
- * translate string into tokens (lexical analysis)
+ * ☑ get the expression string
+ * ☑ translate string into tokens (lexical analysis)
  * build a syntax tree using an inorder binary tree traversal (syntax analysis)
  * evaluate syntax tree by inorder traversal
+ *
+ * The Syntax Tree
+ * For my chosen operators +, -, *, / an array representation of the syntax
+ * tree would be sufficient because the syntax tree is binary. The more
+ * general solution would require a data structure that can handle an n-ary
+ * tree due to having operators that can have more than two operators. In this
+ * case a linked list would work.
  */
 
 struct Token
@@ -34,7 +41,7 @@ struct Token* token_new(char* token_name, char* attribute_value);
 /* struct Token** parser(struct SymbolTable* symbol_table); */
 
 int main() {
-    char expression[MAX_EXPRESSION_SIZE];
+    char expression[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
     scanf("%15s", expression);
 
