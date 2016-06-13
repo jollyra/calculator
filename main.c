@@ -19,17 +19,29 @@
  * general solution would require a data structure that can handle an n-ary
  * tree due to having operators that can have more than two operators. In this
  * case a linked list would work.
+ *
+ * The linked list tree structure makes it simpler to build the syntax tree.
  */
 
 
 // Takes a simple mathematical expression and constructs a syntax tree
 // representation of it.
-char* parse(char* expression);
+struct Node* parse(char* expression);
 
 // Takes a syntax tree of a simple mathematical expression and evaluates it.
 char evaluate(char* syntax_tree);
 
 void print_str(char* str);
+
+// Node that comprises a binary tree
+struct Node
+{
+    char value;
+    struct Node* lchild;
+    struct Node* rchild;
+};
+
+void print_btree(struct Node* root);
 
 int main() {
     char expression[MAX_EXPRESSION_SIZE] = "";
@@ -37,21 +49,18 @@ int main() {
     scanf("%15s", expression);
     print_str(expression);
 
-    char* syntax_tree = parse(expression);
-    print_str(syntax_tree);
+    struct Node* syntax_tree = parse(expression);
 
     printf("\n");
     getchar();
     return 0;
 }
 
-char* parse(char* expression)
+struct Node* parse(char* expression)
 {
-    unsigned long len = strlen(expression);
-    char* syntax_tree = malloc(len);
-    syntax_tree[0] = 'a';
-    syntax_tree[1] = 'b';
-    return syntax_tree;
+    struct Node* root = malloc(sizeof(struct Node));
+    // TODO: recursively build the tree
+    return root;
 }
 
 void print_str(char* str)
