@@ -50,7 +50,7 @@ int main() {
     print_str(expression);
 
     struct Node* syntax_tree = parse(expression);
-
+    print_btree(syntax_tree);
     printf("\n");
     getchar();
     return 0;
@@ -59,6 +59,8 @@ int main() {
 struct Node* parse(char* expression)
 {
     struct Node* root = malloc(sizeof(struct Node));
+    root->lchild = NULL;
+    root->rchild = NULL;
     // TODO: recursively build the tree
     return root;
 }
@@ -66,4 +68,15 @@ struct Node* parse(char* expression)
 void print_str(char* str)
 {
     printf("\nstr: %s\nstrlen: %lu", str, strlen(str));
+}
+
+void print_btree(struct Node* root)
+{
+    printf("\nvalue:%c\tlchild:0x%d \trchild0x%d\n", root->value, (int) root->lchild, (int) root->rchild);
+    if(root->lchild) {
+        print_btree(root->lchild);
+    }
+    if(root->rchild) {
+        print_btree(root->rchild);
+    }
 }
