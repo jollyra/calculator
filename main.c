@@ -72,7 +72,9 @@ void print_str(char* str)
 
 void print_btree(struct Node* root)
 {
-    printf("\nvalue:%c\tlchild:0x%d \trchild0x%d\n", root->value, (int) root->lchild, (int) root->rchild);
+    printf("\nnode: %p\t", root);
+    printf("value: %c\t", root->value);
+    printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
     if(root->lchild) {
         print_btree(root->lchild);
     }
