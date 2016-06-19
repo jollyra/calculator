@@ -128,7 +128,7 @@ int evaluate(struct Node* parent) {
     }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     char expression[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
     scanf("%15s", expression);
