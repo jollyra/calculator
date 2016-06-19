@@ -30,6 +30,9 @@ struct Node* parse(char* expression);
 // Takes a syntax tree of a simple mathematical expression and evaluates it.
 int evaluate(struct Node*);
 int sum(int x, int y);
+int diff(int x, int y);
+int multiply(int x, int y);
+int divide(int x, int y);
 void print_str(char* str);
 // Node that comprises a binary tree
 struct Node {
@@ -37,7 +40,7 @@ struct Node {
     struct Node* lchild;
     struct Node* rchild;
 };
-char* order_of_ops = "+-1";
+char* order_of_ops = "+-*/1";
 void print_btree(struct Node* root);
 
 void print_str(char* str) {
@@ -102,6 +105,14 @@ int diff(int x, int y) {
     return x - y;
 }
 
+int multiply(int x, int y) {
+    return x * y;
+}
+
+int divide(int x, int y) {
+    return x / y;
+}
+
 int evaluate(struct Node* parent) {
     if(!parent) { 
         printf("ERROR: syntax tree is null\n");
@@ -111,6 +122,10 @@ int evaluate(struct Node* parent) {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(parent->value == '-') {
         return diff(evaluate(parent->lchild), evaluate(parent->rchild));
+    } else if(parent->value == '*') {
+        return multiply(evaluate(parent->lchild), evaluate(parent->rchild));
+    } else if(parent->value == '/') {
+        return divide(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(parent->value == '1') {
         return 1;
     } else {
