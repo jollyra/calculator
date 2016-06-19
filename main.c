@@ -40,6 +40,26 @@ struct Node {
 char* order_of_ops = "+-1";
 void print_btree(struct Node* root);
 
+void print_str(char* str) {
+    printf("str: %s\tstrlen: %lu\n", str, strlen(str));
+}
+
+void print_btree(struct Node* root) {
+    if(!root) {
+        printf("ERROR: syntax tree is null\n");
+        return;
+    }
+    printf("node: %p\t", root);
+    printf("value: %c\t", root->value);
+    printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
+    if(root->lchild) {
+        print_btree(root->lchild);
+    }
+    if(root->rchild) {
+        print_btree(root->rchild);
+    }
+}
+
 struct Node* parse(char* expression) {
     // Nothing left to parse so return null pointer
     if(strlen(expression) == 0)
