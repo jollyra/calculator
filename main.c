@@ -37,7 +37,7 @@ struct Node {
     struct Node* lchild;
     struct Node* rchild;
 };
-char* order_of_ops = "+1";
+char* order_of_ops = "+-1";
 void print_btree(struct Node* root);
 
 struct Node* parse(char* expression) {
@@ -74,28 +74,12 @@ struct Node* parse(char* expression) {
     return NULL;
 }
 
-void print_str(char* str) {
-    printf("str: %s\tstrlen: %lu\n", str, strlen(str));
-}
-
-void print_btree(struct Node* root) {
-    if(!root) {
-        printf("ERROR: syntax tree is null\n");
-        return;
-    }
-    printf("node: %p\t", root);
-    printf("value: %c\t", root->value);
-    printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
-    if(root->lchild) {
-        print_btree(root->lchild);
-    }
-    if(root->rchild) {
-        print_btree(root->rchild);
-    }
-}
-
 int sum(int x, int y) {
     return x + y;
+}
+
+int diff(int x, int y) {
+    return x - y;
 }
 
 int evaluate(struct Node* parent) {
@@ -105,6 +89,8 @@ int evaluate(struct Node* parent) {
     }
     if(parent->value == '+') {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
+    } else if(parent->value == '-') {
+        return diff(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(parent->value == '1') {
         return 1;
     } else {
