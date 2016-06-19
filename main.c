@@ -44,19 +44,6 @@ char* order_of_ops = "+1";
 
 void print_btree(struct Node* root);
 
-int main() {
-    char expression[MAX_EXPRESSION_SIZE] = "";
-    printf("Available operations are +, -, *, /\n");
-    scanf("%15s", expression);
-
-    struct Node* syntax_tree = parse(expression);
-    print_btree(syntax_tree);
-
-    printf("\n");
-    getchar();
-    return 0;
-}
-
 struct Node* parse(char* expression) {
     // Nothing left to parse so return null pointer
     if(strlen(expression) == 0)
@@ -70,7 +57,6 @@ struct Node* parse(char* expression) {
     root->lchild = NULL;
     root->rchild = NULL;
 
-    unsigned long len = strlen(expression);
     int i;
     for(i = 0; i < strlen(order_of_ops); i++) {
         char op = order_of_ops[i];
@@ -91,8 +77,6 @@ struct Node* parse(char* expression) {
     return NULL;
 }
 
-
-
 void print_str(char* str) {
     printf("str: %s\tstrlen: %lu\n", str, strlen(str));
 }
@@ -108,4 +92,17 @@ void print_btree(struct Node* root) {
     if(root->rchild) {
         print_btree(root->rchild);
     }
+}
+
+int main() {
+    char expression[MAX_EXPRESSION_SIZE] = "";
+    printf("Available operations are +, -, *, /\n");
+    scanf("%15s", expression);
+
+    struct Node* syntax_tree = parse(expression);
+    print_btree(syntax_tree);
+
+    printf("\n");
+    getchar();
+    return 0;
 }
