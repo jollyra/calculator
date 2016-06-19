@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 
 #define TRUE  1
 #define FALSE 0
@@ -40,7 +41,6 @@ struct Node {
     struct Node* lchild;
     struct Node* rchild;
 };
-char* order_of_ops = "+-*/1";
 void print_btree(struct Node* root);
 
 void print_str(char* str) {
@@ -72,6 +72,7 @@ struct Node* parse(char* expression) {
     root->lchild = NULL;
     root->rchild = NULL;
 
+    char* order_of_ops = "+-*/12";
     int i;
     for(i = 0; i < strlen(order_of_ops); i++) {
         char op = order_of_ops[i];
@@ -95,35 +96,48 @@ struct Node* parse(char* expression) {
 }
 
 int sum(int x, int y) {
+    printf("sum %d, %d\n", x, y);
     return x + y;
 }
 
 int diff(int x, int y) {
+    printf("diff %d, %d\n", x, y);
     return x - y;
 }
 
 int multiply(int x, int y) {
+    printf("multiply %d, %d\n", x, y);
     return x * y;
 }
 
 int divide(int x, int y) {
+    printf("divide %d, %d\n", x, y);
     return x / y;
 }
 
 int evaluate(struct Node* parent) {
     assert(parent != NULL);
-    if(parent->value == '+') {
+    char val = parent->value;
+    if(val == '+') {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(parent->value == '-') {
+    } else if(val == '-') {
         return diff(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(parent->value == '*') {
+    } else if(val == '*') {
         return multiply(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(parent->value == '/') {
+    } else if(val == '/') {
         return divide(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(parent->value == '1') {
-        return 1;
+    } else if(isdigit(val) != FALSE) {
+        if(val == '1') {
+            return 1;
+        } else if(val == '2') {
+            return 2;
+        } else if(val == '3') {
+            return 3;
+        } else if(val == '0') {
+            return 0;
+        }
     } else {
-        printf("ERROR: unknown symbol \'%c\'\n", parent->value);
+        printf("ERROR: unknown symbol \'%c\'\n", val);
         exit(EXIT_FAILURE);
     }
 }
