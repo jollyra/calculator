@@ -27,21 +27,17 @@
 // Takes a simple mathematical expression and constructs a syntax tree
 // representation of it.
 struct Node* parse(char* expression);
-
 // Takes a syntax tree of a simple mathematical expression and evaluates it.
-char evaluate(char* syntax_tree);
-
+int evaluate(struct Node*);
+int sum(int x, int y);
 void print_str(char* str);
-
 // Node that comprises a binary tree
 struct Node {
     char value;
     struct Node* lchild;
     struct Node* rchild;
 };
-
 char* order_of_ops = "+1";
-
 void print_btree(struct Node* root);
 
 struct Node* parse(char* expression) {
@@ -72,6 +68,7 @@ struct Node* parse(char* expression) {
             root->value = op;
             root->lchild = parse(lexpr);
             root->rchild = parse(rexpr);
+            return root;
         }
     }
     return NULL;
@@ -82,7 +79,10 @@ void print_str(char* str) {
 }
 
 void print_btree(struct Node* root) {
-    if(!root) { return; }
+    if(!root) {
+        printf("ERROR: syntax tree is null\n");
+        return;
+    }
     printf("node: %p\t", root);
     printf("value: %c\t", root->value);
     printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
@@ -94,6 +94,24 @@ void print_btree(struct Node* root) {
     }
 }
 
+int sum(int x, int y) {
+    return x + y;
+}
+
+int evaluate(struct Node* parent) {
+    if(!parent) { 
+        printf("ERROR: syntax tree is null\n");
+        return -9999;
+    }
+    if(parent->value == '+') {
+        return sum(evaluate(parent->lchild), evaluate(parent->rchild));
+    } else if(parent->value == '1') {
+        return 1;
+    } else {
+        return -9999;
+    }
+}
+
 int main() {
     char expression[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
@@ -101,6 +119,9 @@ int main() {
 
     struct Node* syntax_tree = parse(expression);
     print_btree(syntax_tree);
+
+    int ans = evaluate(syntax_tree);
+    printf("expression evaluates to %d\n", ans);
 
     printf("\n");
     getchar();
