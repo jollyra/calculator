@@ -58,16 +58,43 @@ int main() {
 
 struct Node* parse(char* expression)
 {
+    printf("%s\n", expression);
     struct Node* root = malloc(sizeof(struct Node));
+    root->value = -1;
     root->lchild = NULL;
     root->rchild = NULL;
-    // TODO: recursively build the tree
+
+    unsigned long len = strlen(expression);
+    int i;
+    for(i = 0; i < len; i++)
+    {
+        char token = expression[i];
+        if(token == '+')
+        {
+            // Split the expression on the operator and recurse
+            char* lexpr = malloc(sizeof(expression));
+            lexpr = strcpy(lexpr, expression);
+            lexpr[i] = '\0';
+            char* rexpr = expression + i + 1;
+            /* printf("lexpr: %s\n", lexpr); */
+
+            root->value = '+';
+            //TODO: slice expression up around the operator
+            root->lchild = parse(lexpr);
+            root->rchild = parse(rexpr);
+        } else if(token == '1')
+        {
+            root->value = '1';
+            root->lchild = NULL;
+            root->rchild = NULL;
+        }
+    }
     return root;
 }
 
 void print_str(char* str)
 {
-    printf("\nstr: %s\nstrlen: %lu", str, strlen(str));
+    printf("\nstr: %s\tstrlen: %lu\n", str, strlen(str));
 }
 
 void print_btree(struct Node* root)
