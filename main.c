@@ -41,16 +41,18 @@ struct Node
     struct Node* rchild;
 };
 
+char* order_of_ops = "+1";
+
 void print_btree(struct Node* root);
 
 int main() {
     char expression[MAX_EXPRESSION_SIZE] = "";
-    printf("Available operations are +, -, *, /");
+    printf("Available operations are +, -, *, /\n");
     scanf("%15s", expression);
-    print_str(expression);
 
     struct Node* syntax_tree = parse(expression);
     print_btree(syntax_tree);
+
     printf("\n");
     getchar();
     return 0;
@@ -58,7 +60,13 @@ int main() {
 
 struct Node* parse(char* expression)
 {
-    printf("%s\n", expression);
+    // Nothing left to parse so return null pointer
+    if(strlen(expression) == 0)
+    {
+        return NULL;
+    }
+
+    print_str(expression);
     struct Node* root = malloc(sizeof(struct Node));
     root->value = -1;
     root->lchild = NULL;
@@ -66,40 +74,38 @@ struct Node* parse(char* expression)
 
     unsigned long len = strlen(expression);
     int i;
-    for(i = 0; i < len; i++)
+    for(i = 0; i < strlen(order_of_ops); i++)
     {
-        char token = expression[i];
-        if(token == '+')
+        char op = order_of_ops[i];
+        char* op_index = index(expression, op);
+        if(op_index)
         {
             // Split the expression on the operator and recurse
             char* lexpr = malloc(sizeof(expression));
             lexpr = strcpy(lexpr, expression);
-            lexpr[i] = '\0';
-            char* rexpr = expression + i + 1;
-            /* printf("lexpr: %s\n", lexpr); */
+            op_index[0] = '\0';
+            lexpr = expression;
+            char* rexpr = op_index + 1;
 
-            root->value = '+';
-            //TODO: slice expression up around the operator
+            root->value = op;
             root->lchild = parse(lexpr);
             root->rchild = parse(rexpr);
-        } else if(token == '1')
-        {
-            root->value = '1';
-            root->lchild = NULL;
-            root->rchild = NULL;
         }
     }
-    return root;
+    return NULL;
 }
+
+
 
 void print_str(char* str)
 {
-    printf("\nstr: %s\tstrlen: %lu\n", str, strlen(str));
+    printf("str: %s\tstrlen: %lu\n", str, strlen(str));
 }
 
 void print_btree(struct Node* root)
 {
-    printf("\nnode: %p\t", root);
+    if(!root) { return; }
+    printf("node: %p\t", root);
     printf("value: %c\t", root->value);
     printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
     if(root->lchild) {
