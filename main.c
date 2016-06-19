@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define TRUE  1
 #define FALSE 0
 #define MAX_EXPRESSION_SIZE 16
-#define NO_NODE -1
 
 /* Algorithm:
  * ☑ get the expression string
@@ -48,10 +48,7 @@ void print_str(char* str) {
 }
 
 void print_btree(struct Node* root) {
-    if(!root) {
-        printf("ERROR: syntax tree is null\n");
-        return;
-    }
+    assert(root != NULL);
     printf("node: %p\t", root);
     printf("value: %c\t", root->value);
     printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
@@ -65,8 +62,7 @@ void print_btree(struct Node* root) {
 
 struct Node* parse(char* expression) {
     // Nothing left to parse so return null pointer
-    if(strlen(expression) == 0)
-    {
+    if(strlen(expression) == 0) {
         return NULL;
     }
 
@@ -94,7 +90,8 @@ struct Node* parse(char* expression) {
             return root;
         }
     }
-    return NULL;
+    printf("ERROR: failed parsing \"%s\"\n", expression);
+    exit(EXIT_FAILURE);
 }
 
 int sum(int x, int y) {
@@ -114,10 +111,7 @@ int divide(int x, int y) {
 }
 
 int evaluate(struct Node* parent) {
-    if(!parent) { 
-        printf("ERROR: syntax tree is null\n");
-        return -9999;
-    }
+    assert(parent != NULL);
     if(parent->value == '+') {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(parent->value == '-') {
@@ -129,7 +123,8 @@ int evaluate(struct Node* parent) {
     } else if(parent->value == '1') {
         return 1;
     } else {
-        return -9999;
+        printf("ERROR: unknown symbol \'%c\'\n", parent->value);
+        exit(EXIT_FAILURE);
     }
 }
 
