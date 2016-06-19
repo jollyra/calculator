@@ -34,8 +34,7 @@ char evaluate(char* syntax_tree);
 void print_str(char* str);
 
 // Node that comprises a binary tree
-struct Node
-{
+struct Node {
     char value;
     struct Node* lchild;
     struct Node* rchild;
@@ -58,8 +57,7 @@ int main() {
     return 0;
 }
 
-struct Node* parse(char* expression)
-{
+struct Node* parse(char* expression) {
     // Nothing left to parse so return null pointer
     if(strlen(expression) == 0)
     {
@@ -74,12 +72,10 @@ struct Node* parse(char* expression)
 
     unsigned long len = strlen(expression);
     int i;
-    for(i = 0; i < strlen(order_of_ops); i++)
-    {
+    for(i = 0; i < strlen(order_of_ops); i++) {
         char op = order_of_ops[i];
         char* op_index = index(expression, op);
-        if(op_index)
-        {
+        if(op_index) {
             // Split the expression on the operator and recurse
             char* lexpr = malloc(sizeof(expression));
             lexpr = strcpy(lexpr, expression);
@@ -97,13 +93,11 @@ struct Node* parse(char* expression)
 
 
 
-void print_str(char* str)
-{
+void print_str(char* str) {
     printf("str: %s\tstrlen: %lu\n", str, strlen(str));
 }
 
-void print_btree(struct Node* root)
-{
+void print_btree(struct Node* root) {
     if(!root) { return; }
     printf("node: %p\t", root);
     printf("value: %c\t", root->value);
