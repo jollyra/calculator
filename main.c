@@ -36,7 +36,10 @@ struct Node {
     struct Node* lchild;
     struct Node* rchild;
 };
+
+// Utility functions
 void print_btree(struct Node* root);
+void print_str(char* str);
 char* maybeRemoveNewline(char *);
 
 void print_str(char* str) {
@@ -56,6 +59,8 @@ void print_btree(struct Node* root) {
     }
 }
 
+// Takes a simple mathematical expression and constructs a syntax tree
+// representation of it.
 struct Node* parse(char* expression) {
     // Nothing left to parse so return null pointer
     if(strlen(expression) == 0) {
@@ -111,6 +116,7 @@ int divide(int x, int y) {
     return x / y;
 }
 
+// Takes a syntax tree of a simple expression and evaluates it.
 int evaluate(struct Node* parent) {
     assert(parent != NULL);
     char val = parent->value;
@@ -151,10 +157,20 @@ int main(int argc, char *argv[]) {
     printf("Available operations are +, -, *, /\n");
     fgets(expression, MAX_EXPRESSION_SIZE, stdin);
 
-    // Remove trailing newline, if there is one
-    if ((strlen(expression) > 0) && (expression[strlen (expression) - 1] == '\n')) {
-        expression[strlen (expression) - 1] = '\0';
-    }
+
+    /* char** tokens = malloc(8); */
+    /* char* stringp = expression; */
+    /* const char* delim = " "; */
+    /* char* token; */
+    /* token = strsep(&stringp, delim); */
+    /* printf("1st token: %s\n", token); */
+    /*  */
+    /* token = strsep(&stringp, delim); */
+    /* printf("2nd token: %s\n", token); */
+    /*  */
+    /* while((token = strsep(&stringp, delim)) != NULL) { */
+    /*     printf("Next: %s\n", token); */
+    /* } */
 
     struct Node* syntax_tree = parse(expression);
     print_btree(syntax_tree);
