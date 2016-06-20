@@ -25,12 +25,12 @@
  */
 
 
-struct Node* parse(char* expression);
+struct Node* parse(char*);
 int evaluate(struct Node*);
-int sum(int x, int y);
-int diff(int x, int y);
-int multiply(int x, int y);
-int divide(int x, int y);
+int sum(int, int);
+int diff(int, int);
+int multiply(int, int);
+int divide(int, int);
 struct Node {
     char value;
     struct Node* lchild;
@@ -38,9 +38,9 @@ struct Node {
 };
 
 // Utility functions
-void print_btree(struct Node* root);
-void print_str(char* str);
-char* maybeRemoveNewline(char *);
+void print_btree(struct Node*);
+void print_str(char*);
+char* maybeRemoveNewline(char*);
 
 void print_str(char* str) {
     printf("str: %s\tstrlen: %lu\n", str, strlen(str));
