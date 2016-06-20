@@ -25,23 +25,19 @@
  */
 
 
-// Takes a simple mathematical expression and constructs a syntax tree
-// representation of it.
 struct Node* parse(char* expression);
-// Takes a syntax tree of a simple mathematical expression and evaluates it.
 int evaluate(struct Node*);
 int sum(int x, int y);
 int diff(int x, int y);
 int multiply(int x, int y);
 int divide(int x, int y);
-void print_str(char* str);
-// Node that comprises a binary tree
 struct Node {
     char value;
     struct Node* lchild;
     struct Node* rchild;
 };
 void print_btree(struct Node* root);
+char* maybeRemoveNewline(char *);
 
 void print_str(char* str) {
     printf("str: %s\tstrlen: %lu\n", str, strlen(str));
@@ -140,6 +136,14 @@ int evaluate(struct Node* parent) {
         printf("ERROR: unknown symbol \'%c\'\n", val);
         exit(EXIT_FAILURE);
     }
+}
+
+// Remove trailing newline, if there is one
+char* maybeRemoveNewline(char *str) {
+    if ((strlen(str) > 0) && (str[strlen (str) - 1] == '\n')) {
+        str[strlen (str) - 1] = '\0';
+    }
+    return str;
 }
 
 int main(int argc, char *argv[]) {
