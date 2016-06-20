@@ -25,6 +25,7 @@
  */
 
 
+char** scan(char*);
 struct Node* parse(char*);
 int evaluate(struct Node*);
 int sum(int, int);
@@ -40,6 +41,7 @@ struct Node {
 // Utility functions
 void print_btree(struct Node*);
 void print_str(char*);
+void print_tokens(char**);
 char* maybeRemoveNewline(char*);
 
 void print_str(char* str) {
@@ -152,27 +154,44 @@ char* maybeRemoveNewline(char *str) {
     return str;
 }
 
+void print_tokens(char** tokens) {
+    printf("tokens:\n");
+    while(*tokens != NULL) {
+        printf("%s\n", *tokens);
+        tokens++;
+    }
+}
+
+char** scan(char* expression) {
+    char** tokens = calloc(16, sizeof(void*));
+    const char* delim = " ";
+    char* token;
+    token = strsep(&expression, delim);
+    printf("1st token: %s\n", token);
+    char** pos = tokens;
+    *pos = token;
+    pos++;
+
+    while((token = strsep(&expression, delim)) != NULL) {
+        printf("Next: %s\n", token);
+        *pos = token;
+        pos++;
+    }
+    print_tokens(tokens);
+    return tokens;
+}
+
 int main(int argc, char *argv[]) {
-    char expression[MAX_EXPRESSION_SIZE] = "";
+    char input_buffer[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
-    fgets(expression, MAX_EXPRESSION_SIZE, stdin);
+    fgets(input_buffer, MAX_EXPRESSION_SIZE, stdin);
+    char* expression = maybeRemoveNewline(input_buffer);
 
+    char** tokens;
+    tokens = scan(expression);
 
-    /* char** tokens = malloc(8); */
-    /* char* stringp = expression; */
-    /* const char* delim = " "; */
-    /* char* token; */
-    /* token = strsep(&stringp, delim); */
-    /* printf("1st token: %s\n", token); */
-    /*  */
-    /* token = strsep(&stringp, delim); */
-    /* printf("2nd token: %s\n", token); */
-    /*  */
-    /* while((token = strsep(&stringp, delim)) != NULL) { */
-    /*     printf("Next: %s\n", token); */
-    /* } */
-
-    struct Node* syntax_tree = parse(expression);
+    struct Node* syntax_tree;
+    syntax_tree = parse(expression);
     print_btree(syntax_tree);
 
     int ans = evaluate(syntax_tree);
