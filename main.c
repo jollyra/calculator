@@ -171,7 +171,6 @@ char** scan(char* expression) {
         *pos = token;
         pos++;
     }
-    print_tokens(tokens);
     return tokens;
 }
 
@@ -184,6 +183,7 @@ int main(int argc, char *argv[]) {
 
     char** tokens;
     tokens = scan(expression);
+    print_tokens(tokens);
 
     struct Node* syntax_tree;
     syntax_tree = parse(expression);
