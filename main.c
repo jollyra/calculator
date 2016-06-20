@@ -145,7 +145,12 @@ int evaluate(struct Node* parent) {
 int main(int argc, char *argv[]) {
     char expression[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
-    scanf("%15s", expression);
+    fgets(expression, MAX_EXPRESSION_SIZE, stdin);
+
+    // Remove trailing newline, if there is one
+    if ((strlen(expression) > 0) && (expression[strlen (expression) - 1] == '\n')) {
+        expression[strlen (expression) - 1] = '\0';
+    }
 
     struct Node* syntax_tree = parse(expression);
     print_btree(syntax_tree);
