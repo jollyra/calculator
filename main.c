@@ -163,17 +163,11 @@ void print_tokens(char** tokens) {
 }
 
 char** scan(char* expression) {
-    char** tokens = calloc(16, sizeof(void*));
+    char** tokens = calloc(MAX_EXPRESSION_SIZE*2-1, sizeof(void*));
     const char* delim = " ";
     char* token;
-    token = strsep(&expression, delim);
-    printf("1st token: %s\n", token);
     char** pos = tokens;
-    *pos = token;
-    pos++;
-
     while((token = strsep(&expression, delim)) != NULL) {
-        printf("Next: %s\n", token);
         *pos = token;
         pos++;
     }
@@ -182,8 +176,9 @@ char** scan(char* expression) {
 }
 
 int main(int argc, char *argv[]) {
-    char input_buffer[MAX_EXPRESSION_SIZE] = "";
     printf("Available operations are +, -, *, /\n");
+
+    char input_buffer[MAX_EXPRESSION_SIZE] = "";
     fgets(input_buffer, MAX_EXPRESSION_SIZE, stdin);
     char* expression = maybeRemoveNewline(input_buffer);
 
