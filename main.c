@@ -26,17 +26,21 @@
 
 
 char** scan(char*);
-struct Node* parse(char*);
+struct Node* parse(char** expression);
 int evaluate(struct Node*);
 int sum(int, int);
 int diff(int, int);
 int multiply(int, int);
 int divide(int, int);
 struct Node {
-    char value;
+    char* value;
     struct Node* lchild;
     struct Node* rchild;
 };
+int list_length(char**);
+int list_index(char** list, char* target);
+int get_highest_precedence_op_idx(char** expression);
+char** sublist(char**, int start, int end);
 
 // Utility functions
 void print_btree(struct Node*);
@@ -51,7 +55,7 @@ void print_str(char* str) {
 void print_btree(struct Node* root) {
     assert(root != NULL);
     printf("node: %p\t", root);
-    printf("value: %c\t", root->value);
+    printf("value: %s\t", root->value);
     printf("lchild: %p \trchild: %p\n", root->lchild, root->rchild);
     if(root->lchild) {
         print_btree(root->lchild);
@@ -61,41 +65,76 @@ void print_btree(struct Node* root) {
     }
 }
 
-// Takes a simple mathematical expression and constructs a syntax tree
-// representation of it.
-struct Node* parse(char* expression) {
-    // Nothing left to parse so return null pointer
-    if(strlen(expression) == 0) {
-        return NULL;
+int list_length(char** list) {
+    int count = 0;
+    while(*list != NULL) {
+        count++;
+        list++;
     }
+    return count;
+}
 
-    print_str(expression);
-    struct Node* root = malloc(sizeof(struct Node));
-    root->value = -1;
-    root->lchild = NULL;
-    root->rchild = NULL;
+int list_index(char** list, char* target) {
+    int idx = 0;
+    while(*list != NULL) {
+        if(strcmp(*list, target) == 0) {
+            return idx;
+        }
+        list++;
+        idx++;
+    }
+    return -1;
+}
 
-    char* order_of_ops = "+-*/12";
-    int i;
-    for(i = 0; i < strlen(order_of_ops); i++) {
+char** sublist(char** list, int start, int end) {
+    // The last pointer must always be null
+    char** sublist = calloc(end - start + 2, sizeof(void*));
+    int count = 0;
+    int pos = start;
+    while(pos <= end) {
+        sublist[count] = list[pos];
+        count++;
+        pos++;
+    }
+    return sublist;
+}
+
+int get_highest_precedence_op_idx(char** expression) {
+    const char order_of_ops[] = "+-*/";
+    for(int i = 0; i < strlen(order_of_ops); i++) {
         char op = order_of_ops[i];
-        char* op_index = index(expression, op);
-        if(op_index) {
-            // Split the expression on the operator and recurse
-            char* lexpr = malloc(sizeof(expression));
-            lexpr = strcpy(lexpr, expression);
-            op_index[0] = '\0';
-            lexpr = expression;
-            char* rexpr = op_index + 1;
-
-            root->value = op;
-            root->lchild = parse(lexpr);
-            root->rchild = parse(rexpr);
-            return root;
+        int op_idx = list_index(expression, &op);
+        if(op_idx >= 0) {
+            return op_idx;
         }
     }
-    printf("ERROR: failed parsing \"%s\"\n", expression);
-    exit(EXIT_FAILURE);
+    return -1;
+}
+
+// Takes a simple mathematical expression and constructs a syntax tree
+// representation of it.
+struct Node* parse(char** expression) {
+    struct Node* node = malloc(sizeof(struct Node));
+    node->lchild = NULL;
+    node->rchild = NULL;
+
+    int len = list_length(expression);
+    if(len == 1) {
+        node->value = expression[0];
+    } else if(len > 1) {
+        int op_idx = get_highest_precedence_op_idx(expression);
+        printf("highest precedence op is %s\n", expression[op_idx]);
+        if(op_idx >= 0) {
+            node->value = expression[op_idx];
+        }
+
+        char** lexpr = sublist(expression, 0, op_idx - 1);
+        node->lchild = parse(lexpr);
+
+        char** rexpr = sublist(expression, op_idx + 1, len - 1);
+        node->rchild = parse(rexpr);
+    }
+    return node;
 }
 
 int sum(int x, int y) {
@@ -121,27 +160,19 @@ int divide(int x, int y) {
 // Takes a syntax tree of a simple expression and evaluates it.
 int evaluate(struct Node* parent) {
     assert(parent != NULL);
-    char val = parent->value;
-    if(val == '+') {
+    char* val = parent->value;
+    if(strcmp(val, "+") == 0) {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(val == '-') {
+    } else if(strcmp(val, "-") == 0) {
         return diff(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(val == '*') {
+    } else if(strcmp(val, "*") == 0) {
         return multiply(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(val == '/') {
+    } else if(strcmp(val, "/") == 0) {
         return divide(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(isdigit(val) != FALSE) {
-        if(val == '1') {
-            return 1;
-        } else if(val == '2') {
-            return 2;
-        } else if(val == '3') {
-            return 3;
-        } else if(val == '0') {
-            return 0;
-        }
+    } else if(strcmp(val, "1") == 0) {
+        return 1;
     } else {
-        printf("ERROR: unknown symbol \'%c\'\n", val);
+        printf("ERROR: unknown symbol \'%s\'\n", val);
         exit(EXIT_FAILURE);
     }
 }
@@ -186,7 +217,7 @@ int main(int argc, char *argv[]) {
     print_tokens(tokens);
 
     struct Node* syntax_tree;
-    syntax_tree = parse(expression);
+    syntax_tree = parse(tokens);
     print_btree(syntax_tree);
 
     int ans = evaluate(syntax_tree);
