@@ -99,6 +99,9 @@ int* scan(char** tokens) {
             lexemes[i] = MUL;
         } else if(strcmp(tokens[i], "/") == 0) {
             lexemes[i] = DIVIDE;
+        } else if(isdigit(tokens[i][0])) {
+            int num = atoi(tokens[i]);
+            lexemes[i] = num;
         } else {
             printf("ERROR: unknown symbol \'%s\'\n", tokens[i]);
             exit(EXIT_FAILURE);
