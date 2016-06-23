@@ -80,6 +80,12 @@ char* maybeRemoveNewline(char *str) {
     return str;
 }
 
+/*
+ * The token can either be:
+ * 1. a supported operator, or
+ * 2. a valid string representation of an integer
+ * If the token is not recognized the process will exit with an error.
+ */
 int* scan(char** tokens) {
     int num_tokens = list_length(tokens);
     int* lexemes = calloc(num_tokens + 1, sizeof(int));
@@ -94,7 +100,8 @@ int* scan(char** tokens) {
         } else if(strcmp(tokens[i], "/") == 0) {
             lexemes[i] = DIVIDE;
         } else {
-            lexemes[i] = ONE;
+            printf("ERROR: unknown symbol \'%s\'\n", tokens[i]);
+            exit(EXIT_FAILURE);
         }
     }
     return lexemes;
@@ -210,11 +217,8 @@ int evaluate(struct Node* parent) {
         return multiply(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(val == DIVIDE) {
         return divide(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(val == ONE) {
-        return 1;
     } else {
-        printf("ERROR: unknown symbol \'%d\'\n", val);
-        exit(EXIT_FAILURE);
+        return val;
     }
 }
 
