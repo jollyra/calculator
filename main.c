@@ -4,8 +4,6 @@
 #include <assert.h>
 #include <ctype.h>
 
-#define TRUE  1
-#define FALSE 0
 #define MAX_EXPRESSION_SIZE 16
 
 /* Algorithm:
@@ -42,34 +40,33 @@ struct Node {
 };
 
 int list_length(char**);
-int lexemes_len(int* lexemes);
+int tokens_len(int* tokens);
 int list_index(int* list, int target);
 int get_highest_precedence_op_idx(int* lexemes);
 int* sublist(int*, int start, int end);
 
 int PLUS = 100;
 int MINUS = 101;
-int MUL = 102;
+int MULTIPLY = 102;
 int DIVIDE = 103;
-int ONE = 1;
 
 // Utility functions
 void print_btree(struct Node*);
 void print_str(char*);
-void print_tokens(char**);
-void print_lexemes(int*);
+void print_lexemes(char**);
+void print_tokens(int*);
 
 
 char** read_input(char* expression) {
-    char** tokens = calloc(MAX_EXPRESSION_SIZE*2, sizeof(void*));
+    char** lexemes = calloc(MAX_EXPRESSION_SIZE*2, sizeof(void*));
     const char* delim = " ";
-    char* token;
-    char** pos = tokens;
-    while((token = strsep(&expression, delim)) != NULL) {
-        *pos = token;
+    char* lexeme;
+    char** pos = lexemes;
+    while((lexeme = strsep(&expression, delim)) != NULL) {
+        *pos = lexeme;
         pos++;
     }
-    return tokens;
+    return lexemes;
 }
 
 // Remove trailing newline, if there is one
@@ -81,33 +78,33 @@ char* maybeRemoveNewline(char *str) {
 }
 
 /*
- * The token can either be:
+ * The lexeme can either be:
  * 1. a supported operator, or
  * 2. a valid string representation of an integer
- * If the token is not recognized the process will exit with an error.
+ * If the lexeme is not recognized the process will exit with an error.
  */
-int* scan(char** tokens) {
-    int num_tokens = list_length(tokens);
-    int* lexemes = calloc(num_tokens + 1, sizeof(int));
-    lexemes[num_tokens + 1] = 0;  // Unique terminating signal
-    for(int i = 0; i < num_tokens; i++) {
-        if(strcmp(tokens[i], "+") == 0) {
-            lexemes[i] = PLUS;
-        } else if(strcmp(tokens[i], "-") == 0) {
-            lexemes[i] = MINUS;
-        } else if(strcmp(tokens[i], "*") == 0) {
-            lexemes[i] = MUL;
-        } else if(strcmp(tokens[i], "/") == 0) {
-            lexemes[i] = DIVIDE;
-        } else if(isdigit(tokens[i][0])) {
-            int num = atoi(tokens[i]);
-            lexemes[i] = num;
+int* scan(char** lexemes) {
+    int num_lexemes = list_length(lexemes);
+    int* tokens = calloc(num_lexemes + 1, sizeof(int));
+    tokens[num_lexemes + 1] = 0;  // Unique terminating signal
+    for(int i = 0; i < num_lexemes; i++) {
+        if(strcmp(lexemes[i], "+") == 0) {
+            tokens[i] = PLUS;
+        } else if(strcmp(lexemes[i], "-") == 0) {
+            tokens[i] = MINUS;
+        } else if(strcmp(lexemes[i], "*") == 0) {
+            tokens[i] = MULTIPLY;
+        } else if(strcmp(lexemes[i], "/") == 0) {
+            tokens[i] = DIVIDE;
+        } else if(isdigit(lexemes[i][0])) {
+            int num = atoi(lexemes[i]);
+            tokens[i] = num;
         } else {
-            printf("ERROR: unknown symbol \'%s\'\n", tokens[i]);
+            printf("ERROR: unknown symbol \'%s\'\n", lexemes[i]);
             exit(EXIT_FAILURE);
         }
     }
-    return lexemes;
+    return tokens;
 }
 
 void print_str(char* str) {
@@ -148,11 +145,11 @@ int list_index(int* list, int target) {
     return -1;
 }
 
-int lexemes_len(int* lexemes) {
+int tokens_len(int* tokens) {
     int count = 0;
-    while(*lexemes != 0) {
+    while(*tokens != 0) {
         count++;
-        lexemes++;
+        tokens++;
     }
     return count;
 }
@@ -170,11 +167,11 @@ int* sublist(int* list, int start, int end) {
     return sublist;
 }
 
-int get_highest_precedence_op_idx(int* lexemes) {
-    int order_of_ops[] = {PLUS, MINUS, MUL, DIVIDE};
-    for(int i = 0; i < 4; i++) {  // TODO: Use a general list iteration with a unique terminating sentinal
+int get_highest_precedence_op_idx(int* tokens) {
+    int order_of_ops[] = {PLUS, MINUS, MULTIPLY, DIVIDE};
+    for(int i = 0; i < 4; i++) {
         int op = order_of_ops[i];
-        int op_idx = list_index(lexemes, op);
+        int op_idx = list_index(tokens, op);
         if(op_idx >= 0) {
             return op_idx;
         }
@@ -184,25 +181,24 @@ int get_highest_precedence_op_idx(int* lexemes) {
 
 // Takes a simple mathematical expression and constructs a syntax tree
 // representation of it.
-struct Node* parse(int* lexemes) {
-    int len = lexemes_len(lexemes);
+struct Node* parse(int* tokens) {
+    int len = tokens_len(tokens);
     struct Node* node = malloc(sizeof(struct Node));
     node->lchild = NULL;
     node->rchild = NULL;
 
     if(len == 1) {
-        node->value = lexemes[0];
+        node->value = tokens[0];
     } else if(len > 1) {
-        int op_idx = get_highest_precedence_op_idx(lexemes);
-        printf("highest precedence op is %d\n", lexemes[op_idx]);
+        int op_idx = get_highest_precedence_op_idx(tokens);
         if(op_idx >= 0) {
-            node->value = lexemes[op_idx];
+            node->value = tokens[op_idx];
         }
 
-        int* lexpr = sublist(lexemes, 0, op_idx - 1);
+        int* lexpr = sublist(tokens, 0, op_idx - 1);
         node->lchild = parse(lexpr);
 
-        int* rexpr = sublist(lexemes, op_idx + 1, len - 1);
+        int* rexpr = sublist(tokens, op_idx + 1, len - 1);
         node->rchild = parse(rexpr);
     }
     return node;
@@ -216,7 +212,7 @@ int evaluate(struct Node* parent) {
         return sum(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(val == MINUS) {
         return diff(evaluate(parent->lchild), evaluate(parent->rchild));
-    } else if(val == MUL) {
+    } else if(val == MULTIPLY) {
         return multiply(evaluate(parent->lchild), evaluate(parent->rchild));
     } else if(val == DIVIDE) {
         return divide(evaluate(parent->lchild), evaluate(parent->rchild));
@@ -245,20 +241,20 @@ int divide(int x, int y) {
     return x / y;
 }
 
-void print_tokens(char** tokens) {
-    printf("tokens:\n");
-    while(*tokens != NULL) {
-        printf("%s\n", *tokens);
-        tokens++;
+void print_lexemes(char** lexemes) {
+    printf("lexemes:\n");
+    while(*lexemes != NULL) {
+        printf("%s\n", *lexemes);
+        lexemes++;
     }
 }
 
-void print_lexemes(int* lexemes) {
+void print_tokens(int* tokens) {
     int i = 0;
-    printf("lexemes:\n");
-    while(*lexemes != 0) {
-        printf("%d\n", *lexemes);
-        lexemes++;
+    printf("tokens:\n");
+    while(*tokens != 0) {
+        printf("%d\n", *tokens);
+        tokens++;
     }
 }
 
@@ -269,17 +265,17 @@ int main(int argc, char *argv[]) {
     fgets(input_buffer, MAX_EXPRESSION_SIZE, stdin);
     char* expression = maybeRemoveNewline(input_buffer);
 
-    char** tokens;
-    tokens = read_input(expression);
-    int len = list_length(tokens);
-    print_tokens(tokens);
-
-    int* lexemes;
-    lexemes = scan(tokens);
+    char** lexemes;
+    lexemes = read_input(expression);
+    int len = list_length(lexemes);
     print_lexemes(lexemes);
 
+    int* tokens;
+    tokens = scan(lexemes);
+    print_tokens(tokens);
+
     struct Node* syntax_tree;
-    syntax_tree = parse(lexemes);
+    syntax_tree = parse(tokens);
     print_btree(syntax_tree);
 
     int ans = evaluate(syntax_tree);
