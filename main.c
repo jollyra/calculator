@@ -89,10 +89,12 @@ int* scan(char** tokens) {
             lexemes[i] = PLUS;
         } else if(strcmp(tokens[i], "-") == 0) {
             lexemes[i] = MINUS;
-        } else if(strcmp(tokens[i], "1") == 0) {
-            lexemes[i] = ONE;
+        } else if(strcmp(tokens[i], "*") == 0) {
+            lexemes[i] = MUL;
+        } else if(strcmp(tokens[i], "/") == 0) {
+            lexemes[i] = DIVIDE;
         } else {
-
+            lexemes[i] = ONE;
         }
     }
     return lexemes;
