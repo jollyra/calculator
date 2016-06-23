@@ -25,6 +25,7 @@
  */
 
 
+char* maybeRemoveNewline(char*);
 char** read_input(char*);
 int* scan(char**);
 struct Node* parse(int* lexemes);
@@ -33,11 +34,13 @@ int sum(int, int);
 int diff(int, int);
 int multiply(int, int);
 int divide(int, int);
+
 struct Node {
     int value;
     struct Node* lchild;
     struct Node* rchild;
 };
+
 int list_length(char**);
 int lexemes_len(int* lexemes);
 int list_index(int* list, int target);
@@ -55,7 +58,45 @@ void print_btree(struct Node*);
 void print_str(char*);
 void print_tokens(char**);
 void print_lexemes(int*);
-char* maybeRemoveNewline(char*);
+
+
+char** read_input(char* expression) {
+    char** tokens = calloc(MAX_EXPRESSION_SIZE*2, sizeof(void*));
+    const char* delim = " ";
+    char* token;
+    char** pos = tokens;
+    while((token = strsep(&expression, delim)) != NULL) {
+        *pos = token;
+        pos++;
+    }
+    return tokens;
+}
+
+// Remove trailing newline, if there is one
+char* maybeRemoveNewline(char *str) {
+    if ((strlen(str) > 0) && (str[strlen (str) - 1] == '\n')) {
+        str[strlen (str) - 1] = '\0';
+    }
+    return str;
+}
+
+int* scan(char** tokens) {
+    int num_tokens = list_length(tokens);
+    int* lexemes = calloc(num_tokens + 1, sizeof(int));
+    lexemes[num_tokens + 1] = 0;  // Unique terminating signal
+    for(int i = 0; i < num_tokens; i++) {
+        if(strcmp(tokens[i], "+") == 0) {
+            lexemes[i] = PLUS;
+        } else if(strcmp(tokens[i], "-") == 0) {
+            lexemes[i] = MINUS;
+        } else if(strcmp(tokens[i], "1") == 0) {
+            lexemes[i] = ONE;
+        } else {
+
+        }
+    }
+    return lexemes;
+}
 
 void print_str(char* str) {
     printf("str: %s\tstrlen: %lu\n", str, strlen(str));
@@ -155,26 +196,6 @@ struct Node* parse(int* lexemes) {
     return node;
 }
 
-int sum(int x, int y) {
-    printf("sum %d, %d\n", x, y);
-    return x + y;
-}
-
-int diff(int x, int y) {
-    printf("diff %d, %d\n", x, y);
-    return x - y;
-}
-
-int multiply(int x, int y) {
-    printf("multiply %d, %d\n", x, y);
-    return x * y;
-}
-
-int divide(int x, int y) {
-    printf("divide %d, %d\n", x, y);
-    return x / y;
-}
-
 // Takes a syntax tree of a simple expression and evaluates it.
 int evaluate(struct Node* parent) {
     assert(parent != NULL);
@@ -195,12 +216,24 @@ int evaluate(struct Node* parent) {
     }
 }
 
-// Remove trailing newline, if there is one
-char* maybeRemoveNewline(char *str) {
-    if ((strlen(str) > 0) && (str[strlen (str) - 1] == '\n')) {
-        str[strlen (str) - 1] = '\0';
-    }
-    return str;
+int sum(int x, int y) {
+    printf("sum %d, %d\n", x, y);
+    return x + y;
+}
+
+int diff(int x, int y) {
+    printf("diff %d, %d\n", x, y);
+    return x - y;
+}
+
+int multiply(int x, int y) {
+    printf("multiply %d, %d\n", x, y);
+    return x * y;
+}
+
+int divide(int x, int y) {
+    printf("divide %d, %d\n", x, y);
+    return x / y;
 }
 
 void print_tokens(char** tokens) {
@@ -218,36 +251,6 @@ void print_lexemes(int* lexemes) {
         printf("%d\n", *lexemes);
         lexemes++;
     }
-}
-
-char** read_input(char* expression) {
-    char** tokens = calloc(MAX_EXPRESSION_SIZE*2, sizeof(void*));
-    const char* delim = " ";
-    char* token;
-    char** pos = tokens;
-    while((token = strsep(&expression, delim)) != NULL) {
-        *pos = token;
-        pos++;
-    }
-    return tokens;
-}
-
-int* scan(char** tokens) {
-    int num_tokens = list_length(tokens);
-    int* lexemes = calloc(num_tokens + 1, sizeof(int));
-    lexemes[num_tokens + 1] = 0;  // Unique terminating signal
-    for(int i = 0; i < num_tokens; i++) {
-        if(strcmp(tokens[i], "+") == 0) {
-            lexemes[i] = PLUS;
-        } else if(strcmp(tokens[i], "-") == 0) {
-            lexemes[i] = MINUS;
-        } else if(strcmp(tokens[i], "1") == 0) {
-            lexemes[i] = ONE;
-        } else {
-
-        }
-    }
-    return lexemes;
 }
 
 int main(int argc, char *argv[]) {
