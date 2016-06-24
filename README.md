@@ -17,7 +17,7 @@ The scanner needs the input expression to be space separated since it is using `
 
 ##### Parser
 The parser taken the list of tokens as input and builds a syntax tree. The syntax tree is represented in memory by a linked list of structs that form a binary tree like so:
-```
+```C
 struct Node {
   int value;
   struct Node* lchild;
