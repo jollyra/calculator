@@ -6,23 +6,6 @@
 
 #define MAX_EXPRESSION_SIZE 16
 
-/* Algorithm:
- * ☑ get the expression string
- * - build a syntax tree using an inorder binary tree traversal with operator
- * precedence (syntax analysis)
- * - evaluate syntax tree
- *
- * The Syntax Tree
- * For my chosen operators +, -, *, / an array representation of the syntax
- * tree would be sufficient because the syntax tree is binary. The more
- * general solution would require a data structure that can handle an n-ary
- * tree due to having operators that can have more than two operators. In this
- * case a linked list would work.
- *
- * The linked list tree structure makes it simpler to build the syntax tree.
- */
-
-
 char* maybeRemoveNewline(char*);
 char** read_input(char*);
 int* scan(char**);
